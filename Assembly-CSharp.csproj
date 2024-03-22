@@ -59,7 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Vampire.cs" />
+    <Compile Include="Assets\EnemyHunter.cs" />
     <Compile Include="Assets\CamMove.cs" />
+    <Compile Include="Assets\EnemyBasic.cs" />
     <Compile Include="Assets\TestMovement.cs" />
   </ItemGroup>
   <ItemGroup>
