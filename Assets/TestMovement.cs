@@ -16,11 +16,10 @@ public class TestMovement : MonoBehaviour
     }
 
     private Vampire vampireControls;
-    PlayerState playerState;
+    [SerializeField]PlayerState playerState;
     Vector2 playerMove;
     [SerializeField]bool hasEnemyGrabbed;
     [SerializeField]bool canAttack = true;
-    bool hunterAttack, hunterQTEButtonPress;
     public float playerSpeed;
     public float playerLunge;
     public float playerGrab;
@@ -76,78 +75,82 @@ public class TestMovement : MonoBehaviour
 
     public void Button(InputAction.CallbackContext obj)
     {
-        if(hunterAttack)
-        {
-            hunterQTEButtonPress = true; 
-        }
-        if (!canAttack) { return; }
+        if (!canAttack) return;
         if (!hasEnemyGrabbed) //if currently not grabbing an enemy
         {
             if (playerMove.y > 0)
             {
-                playerState = PlayerState.Lunging;
                 armsSR.enabled = true;
-                Debug.Log("lunge attack");
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, lungeDistance, enemyLayer);
-                if (!hit) { return; }
-                if (hit.transform.gameObject.CompareTag("Enemy"))
-                {
-                    hit.transform.GetComponent<EnemyBasic>().isGrabbed = true;
-                    hit.transform.GetComponent<EnemyBasic>().grabbedTransform = grabPos;
-                    hasEnemyGrabbed = true;
-                }
+                Debug.Log("lunge");
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, lungeDistance, enemyLayer);
+                if (hit && hit.transform.gameObject.CompareTag("Enemy"))
+                    {
+                        grabbedEnemy = hit.transform;
+                        hit.transform.GetComponent<EnemyBasic>().isGrabbed = true;
+                        hit.transform.GetComponent<EnemyBasic>().grabbedTransform = grabPos;
+                        hasEnemyGrabbed = true;
+                        playerState = PlayerState.Lunging;
+                        rb.AddRelativeForce(Vector2.up * playerLunge);
+                        DisableMovement(2f);
+                        armsSR.enabled = false;
+                    }
+                playerState = PlayerState.Lunging;
                 rb.AddRelativeForce(Vector2.up * playerLunge);
-                StartCoroutine(DisableMovement(0.2f));
+                DisableMovement(0.5f);
+                armsSR.enabled = false;
+
             } // if moving forward lunge attack
-            else if (playerMove.y < 0)
+            else if (playerMove.y < 0 && playerState != PlayerState.Dashing)
             {
                 Debug.Log("Dashback");
                 playerState = PlayerState.Dashing;
                 rb.AddRelativeForce(Vector2.down * playerDashback);
-                StartCoroutine(DisableMovement(0.1f));
+                DisableMovement(2f);
+
             }// if moving backward dashback
             else
             {
                 armsSR.enabled = true;
                 Debug.Log("Grab");
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, grabDistance, enemyLayer);
-                if (!hit) { return; }
-                if (hit.transform.gameObject.CompareTag("Enemy"))
+                if (hit && hit.transform.gameObject.CompareTag("Enemy"))
                 {
+                    grabbedEnemy = hit.transform;
                     hit.transform.GetComponent<EnemyBasic>().isGrabbed = true;
                     hit.transform.GetComponent<EnemyBasic>().grabbedTransform = grabPos;
                     hasEnemyGrabbed = true;
                 }
                 playerState = PlayerState.Grabbing;
                 rb.AddRelativeForce(Vector2.up * playerGrab);
-                StartCoroutine(DisableMovement(0.3f));
+                DisableMovement(0.5f);
+                armsSR.enabled = false;
             }//else do simple grab
         }
         else
         {
-            Debug.Log("keep hold of enemy attempt");
-        }
+            if (grabbedEnemy == null)
+            {
+                hasEnemyGrabbed = false;
+                return;
+            } //if enemy is dead you are not holding an enemy
+            else
+            {
+                Debug.Log(grabbedEnemy.transform.GetComponent<EnemyBasic>().Health - 1);
+                grabbedEnemy.transform.GetComponent<EnemyBasic>().Health -= 1;
+                DisableMovement(0.5f);
+            }
+        }//when enemy is held drinkl blood
     }
 
-    public void HunterTrigger()
+    void DisableMovement(float timer)
     {
-        StartCoroutine(HunterQTE());
+        StopAllCoroutines();
+        StartCoroutine(DisableCoroutine(timer));
     }
 
-    IEnumerator HunterQTE()
+    IEnumerator DisableCoroutine(float timer)
     {
-        float t = 0;
-        hunterAttack = true;
-        while (t < 0.333)
-        {
-
-            yield return null;
-        }
-        hunterAttack = false;
-    }
-
-    IEnumerator DisableMovement(float timer)
-    {
+        canAttack = false;
         yield return new WaitForSeconds(timer);
         playerState = PlayerState.NotAttacking;
         StartCoroutine(CooldownAttack());
@@ -157,7 +160,7 @@ public class TestMovement : MonoBehaviour
     {
         armsSR.enabled = false;
         float t = 0;
-        while(t < 2f)
+        while(t < 0.5f)
         {
             t += Time.deltaTime;
             canAttack = false;

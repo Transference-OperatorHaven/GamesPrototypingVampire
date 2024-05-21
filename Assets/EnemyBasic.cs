@@ -8,6 +8,7 @@ public class EnemyBasic : MonoBehaviour
     public int currentEnd;
     public float speed;
     public bool isGrabbed;
+    public int Health = 3;
     public Transform grabbedTransform;
     BoxCollider2D bC;
 
@@ -20,7 +21,10 @@ public class EnemyBasic : MonoBehaviour
 
     private void FixedUpdate()
     {
-       
+       if(Health <= 0)
+        {
+            Destroy(gameObject); return;
+        }
         if( !isGrabbed )
         {
             bC.enabled = true;
