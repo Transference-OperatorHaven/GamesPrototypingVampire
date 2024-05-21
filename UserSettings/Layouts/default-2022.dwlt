@@ -1013,7 +1013,11 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
+<<<<<<< Updated upstream
     x: 363
+=======
+    x: 0
+>>>>>>> Stashed changes
     y: 73
     width: 1101
     height: 541

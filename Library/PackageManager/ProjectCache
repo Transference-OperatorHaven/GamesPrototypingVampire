@@ -5,7 +5,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638467101399283291
+      ticks: 638519158968208753
     m_Hash: 3582868367
   m_LockFileStatus:
     m_FilePath: C:/Users/s019465n/Documents/GitHub/GamesPrototypingVampire/Packages/packages-lock.json
@@ -13,7 +13,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638467101399283291
+      ticks: 638519158968208753
     m_Hash: 3526860798
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
@@ -120,6 +120,7 @@ m_ResolvedPackages:
     - 3.0.0-pre.8
     - 3.0.0-pre.9
     - 3.0.1
+    - 3.1.0
     compatible:
     - 2.9.5
     - 2.9.7
@@ -132,6 +133,7 @@ m_ResolvedPackages:
     - 3.0.0-pre.8
     - 3.0.0-pre.9
     - 3.0.1
+    - 3.1.0
     recommended: 2.9.7
     deprecated: []
   dependencies:
@@ -575,6 +577,7 @@ m_ResolvedPackages:
     - 1.8.0-pre.2
     - 1.8.0
     - 1.8.1
+    - 1.8.2
     compatible:
     - 1.6.1
     - 1.6.3
@@ -583,6 +586,7 @@ m_ResolvedPackages:
     - 1.8.0-pre.2
     - 1.8.0
     - 1.8.1
+    - 1.8.2
     recommended: 1.6.3
     deprecated: []
   dependencies:
