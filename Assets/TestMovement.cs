@@ -105,7 +105,7 @@ public class TestMovement : MonoBehaviour
                 Debug.Log("Dashback");
                 playerState = PlayerState.Dashing;
                 rb.AddRelativeForce(Vector2.down * playerDashback);
-                DisableMovement(2f);
+                DisableMovement(0.75f);
 
             }// if moving backward dashback
             else
